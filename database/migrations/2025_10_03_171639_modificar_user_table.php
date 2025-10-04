@@ -9,10 +9,13 @@ return new class extends Migration
     /**
      * Run the migrations.
      */
-    public function up()
+    public function up(): void
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->foreignId('role_id')->constrained('roles');
+            $table->unsignedInteger('idPersona')->nullable(); 
+
+            // foreign keys
+            $table->foreign('idPersona')->references('idPersona')->on('personas')->onDelete('cascade');
         });
     }
 
@@ -22,7 +25,8 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('users', function (Blueprint $table) {
-            //
+            $table->dropForeign(['idPersona']);
         });
+        Schema::dropIfExists('users');
     }
 };
