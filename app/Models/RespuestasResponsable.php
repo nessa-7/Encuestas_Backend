@@ -6,10 +6,10 @@ use Illuminate\Database\Eloquent\Model;
 
 class RespuestasResponsable extends Model
 {
-    protected $table = 'respuestasResponsable';
+    protected $table = 'respuestas_responsables';
     protected $primaryKey = 'idRespuestasResponsable';
     public $timestamps = false;
-    protected $fillable = ['idRespuesta','idUsuario','idResponsable','fechaRespuesta'];
+    protected $fillable = ['idRespuesta','idUsuario','idResponsable','fechaRespuesta','idPersonaEvaluada','idCentroFormacion'];
 
     public function respuesta()
     {
@@ -25,4 +25,15 @@ class RespuestasResponsable extends Model
     {
         return $this->belongsTo(Responsable::class, 'idResponsable', 'idResponsable');
     }
+
+    public function personaEvaluada()
+    {
+        return $this->belongsTo(Responsable::class, 'idPersonaEvaluada', 'idResponsable');
+    }
+
+    public function centroFormacion()
+    {
+        return $this->belongsTo(CentroFormacion::class, 'idCentroFormacion', 'idCentroFormacion');
+    }
+
 }

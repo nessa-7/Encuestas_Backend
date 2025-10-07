@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Pregunta extends Model
 {
-    protected $table = 'pregunta';
+    protected $table = 'preguntas';
     protected $primaryKey = 'idPregunta';
     public $timestamps = false;
     protected $fillable = ['idCuestionario','textoPregunta','tipoPregunta'];

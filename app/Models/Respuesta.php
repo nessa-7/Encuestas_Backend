@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Respuesta extends Model
 {
-    protected $table = 'respuesta';
+    protected $table = 'respuestas';
     protected $primaryKey = 'idRespuesta';
     public $timestamps = false;
     protected $fillable = ['idPregunta','textoRespuesta'];

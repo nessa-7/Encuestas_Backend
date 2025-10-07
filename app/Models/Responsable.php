@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Responsable extends Model
 {
-    protected $table = 'responsable';
+    protected $table = 'responsables';
     protected $primaryKey = 'idResponsable';
     public $timestamps = false;
     protected $fillable = ['nombre','correoElectronico','ficha','jornada'];
@@ -14,5 +14,10 @@ class Responsable extends Model
     public function respuestasResponsable()
     {
         return $this->hasMany(RespuestasResponsable::class, 'idResponsable', 'idResponsable');
+    }
+
+    public function relacioninstructor()
+    {
+        return $this->hasMany(RespuestasResponsable::class, 'idPersonaEvaluada', 'idResponsable');
     }
 }
