@@ -20,4 +20,14 @@ class Responsable extends Model
     {
         return $this->hasMany(RespuestasResponsable::class, 'idPersonaEvaluada', 'idResponsable');
     }
+
+    public function programa()
+    {
+        return $this->belongsToMany(Programa::class, 'programa_responsable', 'idResponsable','idPrograma');
+    }
+
+    public function programaResponsables()
+    {
+        return $this->hasMany(ProgramaResponsable::class, 'idResponsable', 'idResponsable');
+    }
 }

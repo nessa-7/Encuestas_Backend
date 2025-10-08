@@ -8,6 +8,8 @@ use App\Models\Respuesta;
 use App\Models\RespuestasResponsable;
 use App\Models\Responsable;
 use App\Models\CentroFormacion;
+use App\Models\Programa;
+
 
 class RespuestaController extends Controller
 {
@@ -17,12 +19,13 @@ class RespuestaController extends Controller
         // Trae todas las preguntas del cuestionario
         $preguntas = Pregunta::all();
         $centros = CentroFormacion::all();
+        $programas = Programa::all();
 
         // Trae solo los responsables que sean instructores (para el select)
         $instructores = Responsable::where('tipoResponsable', 'instructor')->get();
 
         // Retorna la vista con las preguntas e instructores
-        return view('formulario', compact('preguntas', 'instructores', 'centros'));
+        return view('formulario', compact('preguntas', 'instructores', 'centros', 'programas'));
     }
 
     // Método para guardar las respuestas
@@ -31,9 +34,10 @@ class RespuestaController extends Controller
         $preguntas = $request->input('preguntas');
         $idResponsable = $request->input('idResponsable');
         
-        //obtener el instructor elegido en la pregunta 5
+        //obtener el instructor elegido en la pregunta 
+        $idCentroFormacion = $preguntas[3]['respuesta'] ?? null;
+        $idPersonaEvaluada = $preguntas[4]['respuesta'] ?? null;
         $idPersonaEvaluada = $preguntas[5]['respuesta'] ?? null;
-        $idCentroFormacion = $preguntas[4]['respuesta'] ?? null;
 
 
         foreach ($preguntas as $idPregunta => $preguntaData) {
@@ -66,4 +70,24 @@ class RespuestaController extends Controller
 
         return redirect()->back()->with('success', 'Respuestas guardadas correctamente');
     }
+
+        // Obtener los programas de un centro de formación
+    public function obtenerProgramas($idCentroFormacion)
+    {
+        $programas = \App\Models\Programa::where('idCentroFormacion', $idCentroFormacion)->get();
+        return response()->json($programas);
+    }
+
+    // Obtener los profes de un programa
+    public function obtenerInstructores($idPrograma)
+    {
+        $programa = \App\Models\Programa::with('responsables')->find($idPrograma);
+
+        if (!$programa) {
+            return response()->json([]);
+        }
+
+        return response()->json($programa->responsables);
+    }
+
 }

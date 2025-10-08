@@ -17,4 +17,9 @@ class CentroFormacion extends Model
     {
         return $this->hasMany(RespuestasResponsable::class, 'idCentroFormacion', 'idCentroFormacion');
     }
+
+    public function programa()
+    {
+        return $this->hasMany(Programa::class, 'idCentroFormacion', 'idCentroFormacion');
+    }
 }

@@ -22,12 +22,12 @@ class PreguntaSeeder extends Seeder
             ],
             [
                 'idCuestionario' => 1,
-                'textoPregunta' => 'Nombre del programa de formación',
-                'tipoPregunta' => 'abierta',
+                'textoPregunta' => 'Seleccione el centro de formación al que pertenece',
+                'tipoPregunta' => 'unica_respuesta',
             ],
             [
                 'idCuestionario' => 1,
-                'textoPregunta' => 'Seleccione el centro de formación al que pertenece',
+                'textoPregunta' => 'Seleccione el programa de formación al que pertenece',
                 'tipoPregunta' => 'unica_respuesta',
             ],
             [

@@ -369,32 +369,30 @@
 
           @elseif($pregunta->idPregunta == 2)
           <div class="options">
-            <label><input type="radio" name="preguntas[{{ $pregunta->idPregunta }}][respuesta]" value="Siempre" required> Tecnólogo</label>
-            <label><input type="radio" name="preguntas[{{ $pregunta->idPregunta }}][respuesta]" value="Casi siempre" required> Técnico</label>
-            <label><input type="radio" name="preguntas[{{ $pregunta->idPregunta }}][respuesta]" value="Algunas veces" required> Operario</label>
-            <label><input type="radio" name="preguntas[{{ $pregunta->idPregunta }}][respuesta]" value="Casi nunca" required> Auxiliar</label>
-            <label><input type="radio" name="preguntas[{{ $pregunta->idPregunta }}][respuesta]" value="Nunca" required> Otro</label>
+            <label><input type="radio" name="preguntas[{{ $pregunta->idPregunta }}][respuesta]" value="Tecnólogo" required> Tecnólogo</label>
+            <label><input type="radio" name="preguntas[{{ $pregunta->idPregunta }}][respuesta]" value="Técnico" required> Técnico</label>
+            <label><input type="radio" name="preguntas[{{ $pregunta->idPregunta }}][respuesta]" value="Operario" required> Operario</label>
+            <label><input type="radio" name="preguntas[{{ $pregunta->idPregunta }}][respuesta]" value="Auxiliar" required> Auxiliar</label>
+            <label><input type="radio" name="preguntas[{{ $pregunta->idPregunta }}][respuesta]" value="Otro" required> Otro</label>
           </div> 
 
           @elseif($pregunta->idPregunta == 3)
-          
-            <textarea name="preguntas[{{ $pregunta->idPregunta }}][respuesta]" rows="3" placeholder="Escriba su respuesta" required></textarea>
+            <select id="centro" name="preguntas[{{ $pregunta->idPregunta }}][respuesta]" required>
+              <option value="" disabled selected>Seleccione un centro de formación</option>
+              @foreach($centros as $centro)
+                  <option value="{{ $centro->idCentroFormacion }}">{{ $centro->nombre }}</option>
+              @endforeach
+            </select>
 
           @elseif($pregunta->idPregunta == 4)
-              <select name="preguntas[{{ $pregunta->idPregunta }}][respuesta]" required>
-                <option value="" disabled selected>Seleccione un centro de formación</option>
-                @foreach($centros as $centro)
-                    <option value="{{ $centro->idCentroFormacion }}">{{ $centro->nombre }}</option>
-                @endforeach
-              </select>
+            <select id="programa" name="preguntas[{{ $pregunta->idPregunta }}][respuesta]" required disabled>
+              <option value="" disabled selected>Seleccione un programa</option>
+            </select>
 
           @elseif($pregunta->idPregunta == 5)
-              <select name="preguntas[{{ $pregunta->idPregunta }}][respuesta]" required>
-                <option value="" disabled selected>Seleccione un instructor</option>
-                @foreach($instructores as $instructor)
-                  <option value="{{ $instructor->idResponsable }}">{{ $instructor->nombre }}</option>
-                @endforeach
-              </select>
+            <select id="instructor" name="preguntas[{{ $pregunta->idPregunta }}][respuesta]" required disabled>
+              <option value="" disabled selected>Seleccione un instructor</option>
+            </select>
 
           @elseif($pregunta->idPregunta == 6)
           <div class="options">
@@ -615,5 +613,63 @@
       
     </form>
   </div>
+
+
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const centroSelect = document.getElementById('centro');
+    const programaSelect = document.getElementById('programa');
+    const instructorSelect = document.getElementById('instructor');
+
+    if (!centroSelect || !programaSelect || !instructorSelect) return;
+
+    // Cuando cambia el centro
+    centroSelect.addEventListener('change', function() {
+        const idCentro = this.value;
+
+        programaSelect.innerHTML = '<option value="">Cargando programas...</option>';
+        instructorSelect.innerHTML = '<option value="">Seleccione un programa primero</option>';
+        programaSelect.disabled = true;
+        instructorSelect.disabled = true;
+
+        if (idCentro) {
+            fetch(`/programas/${idCentro}`)
+                .then(res => res.json())
+                .then(data => {
+                    programaSelect.disabled = false;
+                    programaSelect.innerHTML = '<option value="">Seleccione un programa</option>';
+                    data.forEach(p => {
+                        programaSelect.innerHTML += `<option value="${p.idPrograma}">${p.nombrePrograma}</option>`;
+                    });
+                });
+        }
+    });
+
+    // Cuando cambia el programa
+    programaSelect.addEventListener('change', function() {
+        const idPrograma = this.value;
+
+        instructorSelect.innerHTML = '<option value="">Cargando instructores...</option>';
+        instructorSelect.disabled = true;
+
+        if (idPrograma) {
+            fetch(`/instructores/${idPrograma}`)
+                .then(res => res.json())
+                .then(data => {
+                    instructorSelect.disabled = false;
+                    instructorSelect.innerHTML = '<option value="">Seleccione un instructor</option>';
+                    data.forEach(r => {
+                        instructorSelect.innerHTML += `<option value="${r.idResponsable}">${r.nombre}</option>`;
+                    });
+                });
+        }
+    });
+});
+</script>
+
+
+
 </body>
 </html>
